@@ -1,6 +1,6 @@
 import { Duplex } from "stream";
 import { RedisClient } from "redis";
-import { RedisStreamPayload } from "../utils/types";
+import { RedisStreamPayload, RedisStreamResult } from "../utils/types";
 import { parseRedisStreamPayload } from "../helpers";
 
 class RedisDuplex extends Duplex {
@@ -30,18 +30,18 @@ class RedisDuplex extends Duplex {
       (err: Error, res: RedisStreamPayload) => {
         if (err) {
           this.destroy(err);
-        } else {
-          const result = parseRedisStreamPayload(res).find(
-            (streamResult) => streamResult.streamKey === this.streamKey
+        } else if (res) {
+          const result = <RedisStreamResult>(
+            parseRedisStreamPayload(res).find(
+              (streamResult) => streamResult.streamKey === this.streamKey
+            )
           );
-          if (result) {
-            let nextIndex = this.currentIndex;
-            result.data.forEach((event) => {
-              nextIndex = event.eventKey;
-              this.push(JSON.parse(event.data.value));
-            });
-            this.currentIndex = nextIndex;
-          }
+          let nextIndex = this.currentIndex;
+          result.data.forEach((event) => {
+            nextIndex = event.eventKey;
+            this.push(JSON.parse(event.data.value));
+          });
+          this.currentIndex = nextIndex;
         }
       }
     );

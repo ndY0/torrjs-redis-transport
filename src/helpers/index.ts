@@ -2,7 +2,7 @@ import { RedisStreamPayload, RedisStreamResult } from "../utils/types";
 
 function parseRedisStreamPayload(
   payload: RedisStreamPayload
-): RedisStreamResult {
+): RedisStreamResult[] {
   return payload.map((streamPayload) => {
     return {
       streamKey: streamPayload[0],

@@ -9,6 +9,6 @@ type RedisStreamResult = {
       value: string;
     };
   }[];
-}[];
+};
 
 export { Class, RedisStreamPayload, RedisStreamResult };

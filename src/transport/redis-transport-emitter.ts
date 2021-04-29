@@ -35,6 +35,7 @@ export class RedisTransportEmitter implements TransportEmitter {
     }
     const innerCanceler = memo(true);
     let result = stream.read(1);
+    /* istanbul ignore next */
     if (!result) {
       result = await Promise.race([
         (async function (passedCanceler, outterCanceler) {

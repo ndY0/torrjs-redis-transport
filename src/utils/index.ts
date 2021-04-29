@@ -13,17 +13,10 @@ async function promisify<Treturn>(
 
 function cure<Tfirst, Trest, Treturn>(
   fn: (...args: [Tfirst, ...Trest[]]) => Treturn,
-  context: any = null
+  context: any
 ): (first: Tfirst) => (...args: Trest[]) => Treturn {
   return (first: Tfirst) => (...args: Trest[]) =>
     fn.call(context, first, ...args);
-}
-
-function getMemoPromise<T>(memo: Generator<[T, EventEmitter], never, T>) {
-  const {
-    value: [_, emitter],
-  } = memo.next();
-  return promisify<T>(cure(emitter.once, emitter)("updated"), emitter);
 }
 
 function getMemoValue<T>(memo: Generator<[T, EventEmitter], never, T>) {
@@ -63,12 +56,4 @@ async function delay(ms: number) {
   await new Promise<void>((resolve) => setTimeout(() => resolve(), ms));
 }
 
-export {
-  promisify,
-  cure,
-  memo,
-  getMemoValue,
-  getMemoPromise,
-  putMemoValue,
-  delay,
-};
+export { promisify, cure, memo, getMemoValue, putMemoValue, delay };
