@@ -19,9 +19,7 @@ jobs:
   test:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [15.x]
+    container: node:15
     # Service containers to run with `test`
     services:
       # Label used to access the service container
